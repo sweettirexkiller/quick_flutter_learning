@@ -22,19 +22,21 @@ class _QuizState extends State<Quiz> {
     } else if(activeScreen == 'questions-screen') {
       return QuestionsScreen(onSelectedAnswer: chooseAnswer);
     } else if(activeScreen == 'results-screen') {
-      return ResultsScreen();
+      return ResultsScreen(chooseAnswers: previousAnswers);
     } else {
       return const Text('Unknown screen');
     }
   }
 
   List<String> selectedAnswers = [];
+  List<String> previousAnswers = [];
 
   void chooseAnswer(String answer) {
    selectedAnswers.add(answer);
 
     if(selectedAnswers.length == questions.length) {
       setState(() {
+        previousAnswers = List.of(selectedAnswers);
         selectedAnswers = [];
         activeScreen = 'results-screen';
       });
