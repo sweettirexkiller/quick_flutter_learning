@@ -2,7 +2,9 @@
 // Quiz widget
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_tutorial_namer_app/data/questions.dart';
 import 'package:flutter_application_tutorial_namer_app/questions_screen.dart';
+import 'package:flutter_application_tutorial_namer_app/results_screen.dart';
 import 'package:flutter_application_tutorial_namer_app/start_screen.dart';
 
 class Quiz extends StatefulWidget {
@@ -13,17 +15,43 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
-  Widget? activeScreen;
+  String activeScreen = 'start-screen';
+  Widget getScreen() {
+    if(activeScreen == 'start-screen') {
+      return StartScreen(switchScreen);
+    } else if(activeScreen == 'questions-screen') {
+      return QuestionsScreen(onSelectedAnswer: chooseAnswer);
+    } else if(activeScreen == 'results-screen') {
+      return ResultsScreen();
+    } else {
+      return const Text('Unknown screen');
+    }
+  }
+
+  List<String> selectedAnswers = [];
+
+  void chooseAnswer(String answer) {
+   selectedAnswers.add(answer);
+
+    if(selectedAnswers.length == questions.length) {
+      setState(() {
+        selectedAnswers = [];
+        activeScreen = 'results-screen';
+      });
+
+    }
+  }
+
 
   @override
   void initState() {
-    activeScreen = StartScreen(switchScreen);
+    activeScreen = 'start-screen';
     super.initState();
   }
 
   void switchScreen() {
     setState(() {
-      activeScreen = QuestionsScreen();
+      activeScreen = 'questions-screen';
     });
   }
 
@@ -39,8 +67,9 @@ class _QuizState extends State<Quiz> {
               colors: [Colors.blue, Colors.green],
             )
           ),
-          child: activeScreen,
-          )
-      );
+          child: getScreen()
+            
+      ),
+    );
   }
 }
