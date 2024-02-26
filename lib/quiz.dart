@@ -22,7 +22,7 @@ class _QuizState extends State<Quiz> {
     } else if(activeScreen == 'questions-screen') {
       return QuestionsScreen(onSelectedAnswer: chooseAnswer);
     } else if(activeScreen == 'results-screen') {
-      return ResultsScreen(chooseAnswers: previousAnswers);
+      return ResultsScreen(chooseAnswers: previousAnswers, onRestart: restartQuiz);
     } else {
       return const Text('Unknown screen');
     }
@@ -54,6 +54,12 @@ class _QuizState extends State<Quiz> {
   void switchScreen() {
     setState(() {
       activeScreen = 'questions-screen';
+    });
+  }
+
+  void restartQuiz() {
+    setState(() {
+      activeScreen = 'start-screen';
     });
   }
 

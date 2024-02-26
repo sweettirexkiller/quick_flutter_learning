@@ -5,8 +5,9 @@ import 'package:flutter_application_tutorial_namer_app/data/questions.dart';
 import 'package:flutter_application_tutorial_namer_app/questions_summary.dart';
 
 class ResultsScreen extends StatelessWidget {
-  const ResultsScreen({Key? key, required this.chooseAnswers}) : super(key: key);
+  const ResultsScreen({Key? key, required this.chooseAnswers, required this.onRestart}) : super(key: key);
 
+  final void Function() onRestart;
   final List<String> chooseAnswers;
 
   List<Map<String, Object>> getSummaryData() {
@@ -31,19 +32,26 @@ class ResultsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final summaryData = getSummaryData();
-    return Container(
-      width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Results', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 20),
-          // number of correct answers
-          Text('You got ${summaryData.where((element) => element['is_correct'] == true).length} out of ${questions.length} questions right', style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 20),
-          QuestionsSummary(summaryData: summaryData)
-        ],
-      ));
+    return SizedBox(
+      height: double.infinity,
+      child: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Results', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 20),
+              // number of correct answers
+              Text('You got ${summaryData.where((element) => element['is_correct'] == true).length} out of ${questions.length} questions right', style: const TextStyle(fontSize: 16)),
+              const SizedBox(height: 20),
+              QuestionsSummary(summaryData: summaryData),
+              const SizedBox(height: 30),
+              ElevatedButton(onPressed: onRestart, child: Text('Restart Quiz'))
+            ],
+          )),
+      ),
+    );
   }
 
 }
