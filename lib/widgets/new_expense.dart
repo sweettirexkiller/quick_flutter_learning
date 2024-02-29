@@ -30,6 +30,44 @@ class _NewExpenseState extends State<NewExpense>{
   }
 
 
+  _submitData(){
+    final enteredTitle = _titleController.text.trim();
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+
+    print('enteredTitle: $enteredTitle');
+    if(enteredTitle.isEmpty || amountIsInvalid || _selectedDate == null){
+      print("error");
+      showDialog(context: context, builder: (ctx){
+        return AlertDialog(
+          title: const Text('Invalid Input'),
+          content: const Text('Please enter a valid title, amount and date'),
+          actions: [
+            TextButton(onPressed: (){
+              Navigator.pop(ctx);
+            }, child: const Text('Okay'))
+          ],
+        );
+      });
+
+      return;
+    }
+
+    final newExpense = Expense(
+                  title: _titleController.text,
+                  amount: amountIsInvalid ? 0 : enteredAmount,
+                  date: _selectedDate ?? DateTime.now(),
+                  category: _category,
+                );
+
+    print(newExpense);
+    // widget.addTx(enteredTitle, enteredAmount, _selectedDate);
+
+    // close the bottom sheet
+    Navigator.of(context).pop();
+  }
+
+
   _presentDatePicker(){
   
       showDatePicker(
@@ -120,22 +158,7 @@ class _NewExpenseState extends State<NewExpense>{
                 Navigator.pop(context);
               }, child: const Text('Cancel')),
             ElevatedButton(
-              onPressed: (){
-              
-                // create a new expense
-                final newExpense = Expense(
-                  title: _titleController.text,
-                  amount: double.parse(_amountController.text),
-                  date: _selectedDate ?? DateTime.now(),
-                  category: _category,
-                );
-
-                // add record to the list
-                // _userExpences.add(newExpense);
-
-                // print the new expense
-                print(newExpense);
-            },
+              onPressed: _submitData,
             child: const Text('Save Expense'),
           ),
 
