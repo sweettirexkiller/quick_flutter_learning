@@ -37,7 +37,7 @@ class _ExpencesState extends State<Expences> {
 
   _openNewExpenseForm() {
     //...
-    showModalBottomSheet(context: context, builder: 
+    showModalBottomSheet(context: context,isScrollControlled: true, builder: 
       (bCtx) =>NewExpense(onAddExpense: _addExpense,)
     );
   }
@@ -45,6 +45,12 @@ class _ExpencesState extends State<Expences> {
   _addExpense(Expense newExpense){
     setState(() {
       _userExpences.add(newExpense);
+    });
+  }
+
+  _removeExpense(String id){
+    setState(() {
+      _userExpences.removeWhere((element) => element.id == id);
     });
   }
 
@@ -64,7 +70,7 @@ class _ExpencesState extends State<Expences> {
       body: Column(
         children: [
           // the list of expences
-          Expanded( child: ExpencesList(expences: _userExpences,))
+          Expanded( child: ExpencesList(expences: _userExpences,onRemoveExpense: _removeExpense,))
         ],
       ),
     );
