@@ -38,8 +38,14 @@ class _ExpencesState extends State<Expences> {
   _openNewExpenseForm() {
     //...
     showModalBottomSheet(context: context, builder: 
-      (bCtx) =>NewExpense()
+      (bCtx) =>NewExpense(onAddExpense: _addExpense,)
     );
+  }
+
+  _addExpense(Expense newExpense){
+    setState(() {
+      _userExpences.add(newExpense);
+    });
   }
 
   @override

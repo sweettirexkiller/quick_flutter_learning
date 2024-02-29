@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_tutorial_namer_app/models/Expense.dart';
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({Key? key}) : super(key: key);
+  const NewExpense({Key? key, required this.onAddExpense}) : super(key: key);
+
+  final void Function(Expense) onAddExpense;
 
   @override
   State<NewExpense> createState() {
@@ -60,7 +62,7 @@ class _NewExpenseState extends State<NewExpense>{
                   category: _category,
                 );
 
-    print(newExpense);
+    widget.onAddExpense(newExpense);
     // widget.addTx(enteredTitle, enteredAmount, _selectedDate);
 
     // close the bottom sheet
