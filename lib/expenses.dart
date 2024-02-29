@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_tutorial_namer_app/widgets/expenses_list/ExpensesList.dart';
 import 'package:flutter_application_tutorial_namer_app/models/Expense.dart';
+import 'package:flutter_application_tutorial_namer_app/widgets/new_expense.dart';
 
 class Expences extends StatefulWidget {
   const Expences({super.key});
@@ -34,13 +35,28 @@ class _ExpencesState extends State<Expences> {
     ),
   ];
 
+  _openNewExpenseForm() {
+    //...
+    showModalBottomSheet(context: context, builder: 
+      (bCtx) =>NewExpense()
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // title: const Text('Personal Expences'),
+        actions: [
+          IconButton(
+            onPressed: _openNewExpenseForm,
+            icon: const Icon(Icons.add),
+          )
+        
+        ],
+      ),
       body: Column(
         children: [
-          Text('The Chart'),
           // the list of expences
           Expanded( child: ExpencesList(expences: _userExpences,))
         ],
