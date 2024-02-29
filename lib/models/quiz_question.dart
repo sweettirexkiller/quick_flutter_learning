@@ -4,7 +4,7 @@ class QuizQuestion {
   final String question;
   final List<String> answers;
 
-  List<String> get shuffledAnswers() {
+  List<String> get shuffledAnswers {
     // final means you cant reassign the variable
     final ret  = List.of(answers);
     ret.shuffle();
