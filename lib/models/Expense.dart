@@ -40,4 +40,10 @@ class Expense {
     return formatter.format(date);
   }
 
+  // to string 
+  @override
+  String toString() {
+    return 'Expense{id: $id, title: $title, amount: $amount, date: $date, category: $category}';
+  }
+
 }

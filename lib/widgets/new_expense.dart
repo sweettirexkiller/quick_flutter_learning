@@ -19,6 +19,8 @@ class _NewExpenseState extends State<NewExpense>{
   final _titleController = TextEditingController();
   late Category _category = Category.Leisure;
   final _amountController = TextEditingController();
+  // date
+  DateTime? _selectedDate;
 
   @override
   void dispose() {
@@ -27,6 +29,25 @@ class _NewExpenseState extends State<NewExpense>{
     super.dispose();
   }
 
+
+  _presentDatePicker(){
+  
+      showDatePicker(
+        context: context, 
+        initialDate: DateTime.now(), 
+        firstDate: DateTime(2021), 
+        lastDate: DateTime.now()
+      ).then((pickedDate){
+        if(pickedDate == null){
+          return;
+        }
+
+        setState(() {
+          _selectedDate = pickedDate;
+        });
+      });
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,41 +63,54 @@ class _NewExpenseState extends State<NewExpense>{
           ),
 
           
-            Row(children: [
-              Expanded(child: 
-                TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Amount', prefixText: '\$'),
-                  controller: _amountController,
-                ),
+          Row(children: [
+            Expanded(child: 
+              TextField(
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Amount', prefixText: '\$'),
+                controller: _amountController,
               ),
+            ),
             
-              const SizedBox(width: 10),
-
-              // dropdown for category
-              Expanded(child: 
-                DropdownButton(
-                  items: Category.values.map((category) => DropdownMenuItem(
-                    value: category,
-                    child: Text(category.toString().split('.').last),
-                  )).toList(),
-                  onChanged: (Category? value){
-                    // set state category
-                    _category = value!;
-                    print(_category);
-                  },
-                ),
-              ),
+            const SizedBox(width: 10),
               
-              Expanded(child: 
-                IconButton(
-                  onPressed: (){},
-                  icon: const Icon(Icons.calendar_today),
-                ),
-              ),
+            Expanded(child: 
+              Column(
+                children: [
+                  Text(_selectedDate == null ? 'No Date Chosen!' : 'Picked Date: ${formatter.format(_selectedDate!)}'),
+                  
+                  IconButton(
+                    onPressed: _presentDatePicker,
+                    icon: const Icon(Icons.calendar_today),
+                  ),
+              ])),
+            
             ],),
          
           // input field for amount
+
+          Row(
+            children: [
+              const Text('Category'),
+              const SizedBox(width: 50),
+              DropdownButton<Category>(
+                value: _category,
+                onChanged: (Category? newValue){
+                  if(newValue != null){
+                    setState(() {
+                      _category = newValue;
+                    });
+                  }
+                },
+                items: Category.values.map((Category category){
+                  return DropdownMenuItem<Category>(
+                    value: category,
+                    child: Text(category.toString().split('.').last),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
 
           // space 
           const SizedBox(height: 10), 
@@ -87,22 +121,20 @@ class _NewExpenseState extends State<NewExpense>{
               }, child: const Text('Cancel')),
             ElevatedButton(
               onPressed: (){
-                // print the title
-                Navigator.pop(context);
-                print(
-                  _titleController.text
-                );
-                // print the amount
-                print(
-                  _amountController.text
-                );
+              
                 // create a new expense
                 final newExpense = Expense(
                   title: _titleController.text,
-                  amount: 0,
-                  date: DateTime.now(),
-                  category: Category.Leisure,
+                  amount: double.parse(_amountController.text),
+                  date: _selectedDate ?? DateTime.now(),
+                  category: _category,
                 );
+
+                // add record to the list
+                // _userExpences.add(newExpense);
+
+                // print the new expense
+                print(newExpense);
             },
             child: const Text('Save Expense'),
           ),
