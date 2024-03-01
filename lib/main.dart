@@ -1,12 +1,19 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_tutorial_namer_app/expenses.dart';
 
 
 
 void main() {
-  runApp(MaterialApp(
+  // lock orientation to portrait
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]).then((fn) {
+    runApp(MaterialApp(
     darkTheme: ThemeData.dark(),
     theme: ThemeData().copyWith(
         primaryColor: Colors.grey[800],
@@ -33,4 +40,8 @@ void main() {
       ),
     home: Expences()
     ));
+  // });
+
+
+  
 }

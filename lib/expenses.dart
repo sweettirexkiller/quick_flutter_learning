@@ -73,7 +73,13 @@ class _ExpencesState extends State<Expences> {
 
   @override
   Widget build(BuildContext context) {
-    
+    MediaQueryData mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+    final width = mediaQuery.size.width;
+    print("h: ${mediaQuery.size.height}");
+    print("w: ${mediaQuery.size.width}");
+
+
      Widget mainContent = const Center(child: Text('No expenses added yet'),);
     if(_userExpences.isNotEmpty){
       mainContent = ExpencesList(expences: _userExpences,onRemoveExpense: _removeExpense,);
@@ -90,13 +96,18 @@ class _ExpencesState extends State<Expences> {
         
         ],
       ),
-      body: Column(
+    // swtiched to row if in landscape mode
+      body: width < 600 ?Column(
         children: [
           Chart(expenses: _userExpences),
           // the list of expences
           Expanded( child: mainContent )
         ],
-      ),
+      ) : Row(children: [
+          Expanded(child: Chart(expenses: _userExpences)),
+          // the list of expences
+          Expanded( child: mainContent )
+        ],),
     );
   }
 }
