@@ -13,6 +13,13 @@ class ExpencesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(itemBuilder: (ctx,idx)=> Dismissible(
+      background: Container(
+        color: Theme.of(context).colorScheme.error.withOpacity(0.4),
+        child: const Icon(Icons.delete, color: Colors.white, size: 40,),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      ),
       key: ValueKey(expences[idx].id),
       onDismissed: (direction){ onRemoveExpense(expences[idx].id);},
       child:ExpenseItem(expense: expences[idx],)), itemCount: expences.length,);

@@ -45,13 +45,10 @@ class ExpenseItem extends StatelessWidget {
                     expense.icon,
                     color: Theme.of(context).primaryColor,
                   ),
-                  const SizedBox(width: 5),
+                  
                   Text(
                     expense.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ],
               ),
