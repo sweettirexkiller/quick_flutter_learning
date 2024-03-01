@@ -91,83 +91,97 @@ class _NewExpenseState extends State<NewExpense>{
 
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: 
-      const EdgeInsets.all(25),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          TextField(
-            maxLength: 50,
-            controller: _titleController,
-            decoration: const InputDecoration(labelText: 'Title'),
-          ),
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
 
-          
-          Row(children: [
-            Expanded(child: 
-              TextField(
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Amount', prefixText: '\$'),
-                controller: _amountController,
-              ),
-            ),
-            
-            const SizedBox(width: 10),
-              
-            Expanded(child: 
-              Column(
+    return LayoutBuilder(builder: (ctx, constrains){
+        final width = constrains.maxWidth;
+
+        return SizedBox(
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16,16,16,keyboardSpace + 16),
+              child: Column(
+                
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(_selectedDate == null ? 'No Date Chosen!' : 'Picked Date: ${formatter.format(_selectedDate!)}'),
-                  
-                  IconButton(
-                    onPressed: _presentDatePicker,
-                    icon: const Icon(Icons.calendar_today),
+                  TextField(
+                    maxLength: 50,
+                    controller: _titleController,
+                    decoration: const InputDecoration(labelText: 'Title'),
                   ),
-              ])),
             
-            ],),
-         
-          // input field for amount
-
-          Row(
-            children: [
-              const Text('Category'),
-              const SizedBox(width: 50),
-              DropdownButton<Category>(
-                value: _category,
-                onChanged: (Category? newValue){
-                  if(newValue != null){
-                    setState(() {
-                      _category = newValue;
-                    });
-                  }
-                },
-                items: Category.values.map((Category category){
-                  return DropdownMenuItem<Category>(
-                    value: category,
-                    child: Text(category.toString().split('.').last),
-                  );
-                }).toList(),
-              ),
-            ],
+                  
+                  Row(children: [
+                    Expanded(child: 
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(labelText: 'Amount', prefixText: '\$'),
+                        controller: _amountController,
+                      ),
+                    ),
+                    
+                    const SizedBox(width: 10),
+                      
+                    Expanded(child: 
+                      Column(
+                        children: [
+                          Text(_selectedDate == null ? 'No Date Chosen!' : 'Picked Date: ${formatter.format(_selectedDate!)}'),
+                          
+                          IconButton(
+                            onPressed: _presentDatePicker,
+                            icon: const Icon(Icons.calendar_today),
+                          ),
+                      ])),
+                    
+                    ],),
+                
+                  // input field for amount
+            
+                  Row(
+                    children: [
+                      const Text('Category'),
+                      const SizedBox(width: 50),
+                      DropdownButton<Category>(
+                        value: _category,
+                        onChanged: (Category? newValue){
+                          if(newValue != null){
+                            setState(() {
+                              _category = newValue;
+                            });
+                          }
+                        },
+                        items: Category.values.map((Category category){
+                          return DropdownMenuItem<Category>(
+                            value: category,
+                            child: Text(category.toString().split('.').last),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+            
+                  // space 
+                  const SizedBox(height: 10), 
+                  Row(children: [
+                    TextButton(onPressed: (){
+                        print('Cancel button pressed!');
+                        Navigator.pop(context);
+                      }, child: const Text('Cancel')),
+                    ElevatedButton(
+                      onPressed: _submitData,
+                    child: const Text('Save Expense'),
+                  ),
+            
+                  ],)
+                
+                ],
+              )),
           ),
+    );
+    });
 
-          // space 
-          const SizedBox(height: 10), 
-          Row(children: [
-            TextButton(onPressed: (){
-                print('Cancel button pressed!');
-                Navigator.pop(context);
-              }, child: const Text('Cancel')),
-            ElevatedButton(
-              onPressed: _submitData,
-            child: const Text('Save Expense'),
-          ),
-
-          ],)
-         
-        ],
-      ));
+    
   }
 
 

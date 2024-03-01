@@ -38,8 +38,11 @@ class _ExpencesState extends State<Expences> {
 
   _openNewExpenseForm() {
     //...
-    showModalBottomSheet(context: context,isScrollControlled: true, builder: 
-      (bCtx) =>NewExpense(onAddExpense: _addExpense,)
+    showModalBottomSheet(
+      useSafeArea: true,
+      context: context,
+      isScrollControlled: true, 
+      builder: (bCtx) =>NewExpense(onAddExpense: _addExpense,)
     );
   }
 
