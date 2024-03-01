@@ -49,13 +49,35 @@ class _ExpencesState extends State<Expences> {
   }
 
   _removeExpense(String id){
+    final expense = _userExpences.firstWhere((element) => element.id == id);
+    final expenseIndex = _userExpences.indexWhere((element) => element.id == id);
     setState(() {
       _userExpences.removeWhere((element) => element.id == id);
     });
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 4),
+      content: const Text('Expense removed'),
+      action: SnackBarAction(
+        label: 'UNDO',
+        onPressed: (){
+          setState(() {
+            _userExpences.insert(expenseIndex, expense);
+          });
+        },
+      ),
+      ));
   }
 
   @override
   Widget build(BuildContext context) {
+    
+     Widget mainContent = const Center(child: Text('No expenses added yet'),);
+    if(_userExpences.isNotEmpty){
+      mainContent = ExpencesList(expences: _userExpences,onRemoveExpense: _removeExpense,);
+    }
+
     return Scaffold(
       appBar: AppBar(
         // title: const Text('Personal Expences'),
@@ -70,7 +92,7 @@ class _ExpencesState extends State<Expences> {
       body: Column(
         children: [
           // the list of expences
-          Expanded( child: ExpencesList(expences: _userExpences,onRemoveExpense: _removeExpense,))
+          Expanded( child: mainContent )
         ],
       ),
     );
