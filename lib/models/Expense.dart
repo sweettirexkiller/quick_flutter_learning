@@ -47,3 +47,16 @@ class Expense {
   }
 
 }
+
+class ExpenseBucket {
+  const ExpenseBucket({required this.category, required this.exenses});
+  final Category category;
+  final List<Expense> exenses;
+
+  ExpenseBucket.forCategory(List<Expense> allExpenses, Category category) 
+  : category = category, exenses = allExpenses.where((element) => element.category == category).toList();
+
+  double get totalExpenses {
+    return exenses.fold(0.0, (previousValue, element) => previousValue + element.amount);
+  }
+}

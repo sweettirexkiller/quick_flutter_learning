@@ -29,9 +29,7 @@ void main() {
             )
         ),
         // darkTheme: ThemeData.dark(),
-        colorScheme: ThemeData().colorScheme.copyWith(
-          error: Colors.red,
-        ),
+        
       ),
     home: Expences()
     ));

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_tutorial_namer_app/widgets/chart/chart.dart';
 import 'package:flutter_application_tutorial_namer_app/widgets/expenses_list/ExpensesList.dart';
 import 'package:flutter_application_tutorial_namer_app/models/Expense.dart';
 import 'package:flutter_application_tutorial_namer_app/widgets/new_expense.dart';
@@ -91,6 +92,7 @@ class _ExpencesState extends State<Expences> {
       ),
       body: Column(
         children: [
+          Chart(expenses: _userExpences),
           // the list of expences
           Expanded( child: mainContent )
         ],
