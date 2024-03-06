@@ -13,11 +13,40 @@ class MealDetails extends StatelessWidget {
       appBar: AppBar(
         title: Text(meal.title),
       ),
-      body: Image.network(
-        meal.imageUrl,
-        width: double.infinity,
-        fit: BoxFit.cover,
-        height: 300,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.network(
+              meal.imageUrl,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              height: 300,
+            ),
+            const SizedBox(height: 10),
+            Text('Ingredients', style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onBackground,
+              fontWeight: FontWeight.bold,
+            )),
+            const SizedBox(height: 10),
+            for(final ingredient in meal.ingredients) 
+              Text(ingredient, style: const TextStyle(color: Colors.white)),
+            const SizedBox(height: 10),
+             Text('Steps', style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: Theme.of(context).colorScheme.onBackground,
+              fontWeight: FontWeight.bold,
+            )),
+            const SizedBox(height: 10),
+            for(final step in meal.steps) 
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Text(step, 
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white)
+                    ),
+              ),
+            const SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }
