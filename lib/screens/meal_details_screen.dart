@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_tutorial_namer_app/main.dart';
 import 'package:flutter_application_tutorial_namer_app/models/meal.dart';
 
 class MealDetails extends StatelessWidget {
-  const MealDetails({Key? key, required this.meal}) : super(key: key);
+  const MealDetails({Key? key, required this.meal, required this.onToggleFavorite}) : super(key: key);
 
   final Meal meal;
+  final void Function(Meal) onToggleFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class MealDetails extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              onToggleFavorite(meal);
             },
             icon: const Icon(Icons.star),
           ),
