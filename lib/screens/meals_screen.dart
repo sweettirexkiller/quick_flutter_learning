@@ -4,18 +4,17 @@ import 'package:flutter_application_tutorial_namer_app/screens/meal_details_scre
 import 'package:flutter_application_tutorial_namer_app/widgets/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen({Key? key, required this.title, required this.meals}) : super(key: key);
+  const MealsScreen({Key? key, this.title, required this.meals}) : super(key: key);
 
-  final String title;
+  final String? title;
   final List<Meal> meals;
 
   void selectMeal(BuildContext ctx, Meal meal) {
     Navigator.of(ctx).push(MaterialPageRoute(builder: (ctx) => MealDetails(meal: meal)));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    
+  Widget get content {
+
     if (meals.isEmpty) {
       return const Center(
         child: Column(
@@ -26,6 +25,21 @@ class MealsScreen extends StatelessWidget {
             Text('No meals found for this category'),
           ],
       ));
+    }
+
+    return ListView.builder(
+      itemBuilder: (ctx, index) {
+        return MealItem(meal: meals[index], onSelectMeal: selectMeal);
+      },
+      itemCount: meals.length,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    
+    if(title == null){
+      return content;
     }
 
     return Scaffold(
