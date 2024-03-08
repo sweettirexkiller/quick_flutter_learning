@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_tutorial_namer_app/models/meal.dart';
 import 'package:flutter_application_tutorial_namer_app/providers/favorites_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
 
 class MealDetails extends ConsumerWidget {
-  const MealDetails({Key? key, required this.meal}) : super(key: key);
+  MealDetails({Key? key, required this.meal}) : super(key: key);
 
   final Meal meal;
 
-
+  
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isFavorite = ref.watch(favoriteMealsProvider).contains(meal);
     return Scaffold(
+ 
+
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
@@ -25,7 +29,7 @@ class MealDetails extends ConsumerWidget {
                   duration: const Duration(seconds: 2),
                 ));
             },
-            icon: const Icon(Icons.star),
+            icon: Icon( isFavorite ? Icons.star : Icons.star_border),
           ),
         ],
       ),
