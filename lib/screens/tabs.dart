@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_tutorial_namer_app/data/dummy_data.dart';
 import 'package:flutter_application_tutorial_namer_app/models/meal.dart';
 import 'package:flutter_application_tutorial_namer_app/providers/favorites_provider.dart';
+import 'package:flutter_application_tutorial_namer_app/providers/filters_provider.dart';
 import 'package:flutter_application_tutorial_namer_app/providers/meals_provider.dart';
 import 'package:flutter_application_tutorial_namer_app/screens/categories_screen.dart';
 import 'package:flutter_application_tutorial_namer_app/screens/filters.dart';
@@ -25,7 +26,7 @@ const kInitialFilters = {
 
 class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedPageIndex = 0;
-  Map<Filter, bool> _selectedFilters = kInitialFilters;
+  // Map<Filter, bool> _selectedFilters = ref.watch(filtersProvider);
 
     void _showInfoMessage(BuildContext context, String message) {
       ScaffoldMessenger.of(context).clearSnackBars();
@@ -63,13 +64,9 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
      Navigator.of(context).pop();
     if (identifier == 'filters') {
       final result = await Navigator.of(context).push<Map<Filter, bool>>(MaterialPageRoute(builder: (_) {
-        return FiltersScreen(currentFilters: _selectedFilters,);
+        return FiltersScreen();
       }));
 
-    
-      setState(() {
-        _selectedFilters = result ?? kInitialFilters;
-      });
     
     }
   }
@@ -77,6 +74,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     final meals = ref.watch(mealsProvider);
+    final _selectedFilters = ref.watch(filtersProvider);
     final availableMeals = meals.where((meal){
           if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
             return false;
