@@ -14,6 +14,10 @@ class FiltersNotifier extends StateNotifier<Map<Filter, bool>> {
   void toggleFilter(Filter filter) {
     state = Map.from(state)..update(filter, (value) => !value);
   }
+
+  void setFilter(Filter glutenFree, bool isChecked) {
+    state = Map.from(state)..update(glutenFree, (value) => isChecked);
+  }
 }
 
 final filtersProvider = StateNotifierProvider<FiltersNotifier, Map<Filter, bool>>((ref){
