@@ -36,7 +36,6 @@ class _NewItemState extends State<NewItem> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-
                 Expanded(
                   child: TextFormField(
                     keyboardType: TextInputType.number,
@@ -74,6 +73,14 @@ class _NewItemState extends State<NewItem> {
                 ),
               ],
             ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(onPressed: (){}, child: const Text('Reset')),
+                ElevatedButton(onPressed: (){}, child: const Text('Add Item')),
+              ],
+            )
           ],),
           )
       ),
