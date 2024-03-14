@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_10/data/categories.dart';
+import 'package:flutter_application_10/models/category.dart';
 
 class NewItem extends StatefulWidget {
   // constructor
@@ -12,6 +13,23 @@ class NewItem extends StatefulWidget {
 }
 
 class _NewItemState extends State<NewItem> {
+  final _formKey = GlobalKey<FormState>();
+  var _enteredName = '';
+  var _enteredQuantity = 1;
+  var _selectedCategory = categories[Categories.vegetables]!;
+
+  void _saveItem() {
+    final isValid = _formKey.currentState!.validate();
+    if(!isValid){
+      return;
+    }
+    _formKey.currentState!.save();
+
+    print(_enteredName);
+    print(_enteredQuantity);
+    print(_selectedCategory.title);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +41,7 @@ class _NewItemState extends State<NewItem> {
       Padding(
         padding: const EdgeInsets.all(12.0),
         child: Form(
+          key: _formKey,
           child: Column(
             children: [
               TextFormField(
@@ -30,7 +49,19 @@ class _NewItemState extends State<NewItem> {
                 decoration: const InputDecoration(
                   labelText: 'Name',
                 ),
-                validator: (value) => value!.isEmpty ? 'Please enter a name' : null,
+                validator: (value) {
+                  if(value == null 
+                  || value.isEmpty 
+                  || value.trim().length <= 1 
+                  || value.trim().length > 50){
+                    return 'Must be between 1 and 50 characters long';
+                  }
+                  
+                  return null;
+                },
+                onSaved: (value) {
+                  _enteredName = value!;
+                },
               ),
 
             Row(
@@ -42,8 +73,20 @@ class _NewItemState extends State<NewItem> {
                     decoration: const InputDecoration(
                       labelText: 'Quantity',
                     ),
-                    initialValue: '1',
-                    validator: (value) => value!.isEmpty ? 'Please enter a quantity' : null,
+                    initialValue: _enteredQuantity.toString(),
+                   validator: (value) {
+                  if(value == null 
+                  || value.isEmpty 
+                  || int.tryParse(value) == null
+                  || int.tryParse(value)! <= 0){
+                    return 'Must be a valid positive number';
+                  }
+                  
+                  return null;
+                },
+                onSaved: (value){
+                  _enteredQuantity = int.parse(value!);
+                },
                   ),
                 ),
             
@@ -51,7 +94,12 @@ class _NewItemState extends State<NewItem> {
               
                 Expanded(
                   child: DropdownButtonFormField(
-                    onChanged: (value) {},
+                    value: _selectedCategory,
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCategory = value as Category;
+                      });
+                    },
                     items: [  
                       for(final category in categories.entries)
                         DropdownMenuItem(
@@ -77,8 +125,10 @@ class _NewItemState extends State<NewItem> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (){}, child: const Text('Reset')),
-                ElevatedButton(onPressed: (){}, child: const Text('Add Item')),
+                TextButton(onPressed: (){
+                  _formKey.currentState!.reset();
+                }, child: const Text('Reset')),
+                ElevatedButton(onPressed: _saveItem, child: const Text('Add Item')),
               ],
             )
           ],),
