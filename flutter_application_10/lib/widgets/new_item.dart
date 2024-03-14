@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_10/data/categories.dart';
 import 'package:flutter_application_10/models/category.dart';
+import 'package:flutter_application_10/models/grocery_item.dart';
 
 class NewItem extends StatefulWidget {
   // constructor
@@ -28,7 +29,16 @@ class _NewItemState extends State<NewItem> {
     print(_enteredName);
     print(_enteredQuantity);
     print(_selectedCategory.title);
+
+    Navigator.of(context).pop(GroceryItem(
+      id: DateTime.now().toString(),
+      name: _enteredName,
+      quantity: _enteredQuantity,
+      category: _selectedCategory,
+    ));
   }
+
+
 
   @override
   Widget build(BuildContext context) {
