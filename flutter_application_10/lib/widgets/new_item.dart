@@ -21,6 +21,7 @@ class _NewItemState extends State<NewItem> {
   var _enteredName = '';
   var _enteredQuantity = 1;
   var _selectedCategory = categories[Categories.vegetables]!;
+  var _isSending = false;
 
   void _saveItem() async {
     final isValid = _formKey.currentState!.validate();
@@ -28,6 +29,7 @@ class _NewItemState extends State<NewItem> {
       return;
     }
     _formKey.currentState!.save();
+    _isSending = true;
 
     final result = await http.post(
       headers: {
@@ -42,12 +44,7 @@ class _NewItemState extends State<NewItem> {
     );
 
     final resData = json.decode(result.body);
-    print(result.statusCode);
-
-    print(_enteredName);
-    print(_enteredQuantity);
-    print(_selectedCategory.title);
-
+   
     if(!context.mounted){
       return;
     }
@@ -152,10 +149,11 @@ class _NewItemState extends State<NewItem> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (){
+                TextButton(onPressed: _isSending ? null : (){
                   _formKey.currentState!.reset();
                 }, child: const Text('Reset')),
-                ElevatedButton(onPressed: _saveItem, child: const Text('Add Item')),
+                ElevatedButton(onPressed: _isSending ? null : _saveItem, child: _isSending ? 
+                const SizedBox(width: 16,height: 16,child: CircularProgressIndicator()):const Text('Add Item')),
               ],
             )
           ],),

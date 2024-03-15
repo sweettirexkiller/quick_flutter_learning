@@ -19,6 +19,7 @@ class _GroceryListState extends State<GroceryList> {
 
   final List<GroceryItem> _groceryItems = [];
   var _isLoading = true;
+  String? _error;
 
   @override
   void initState() {
@@ -31,6 +32,14 @@ class _GroceryListState extends State<GroceryList> {
     final result = await http.get(
       Uri.https('flutter-tutorial-622e7-default-rtdb.firebaseio.com', 'shopping-list.json'),
     );
+
+    print(result.statusCode);
+    if(result.statusCode >= 400){
+      setState(() {
+        _error = 'Error loading data: ${result.statusCode}';
+      });
+      return;
+    }
 
     // map result.body to a list of grocery items
     // tmp list of grocery items
@@ -73,6 +82,30 @@ class _GroceryListState extends State<GroceryList> {
   }
 
 
+  void removeItem(GroceryItem item) async {
+
+    final index = _groceryItems.indexOf(item);
+
+     setState(() {
+      _groceryItems.remove(item);
+    });
+
+    final url = Uri.https('flutter-tutorial-622e7-default-rtdb.firebaseio.com', 'shopping-list/${item.id}.json');
+
+    final res = await http.delete(url);
+    
+    if(res.statusCode >= 400){
+      print('Error deleting item: ${res.statusCode}');
+      setState(() {
+        _groceryItems.insert(index, item);
+      });
+      return;
+    }
+
+   
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Widget content = const Center(child: Text('No items yet!'),);
@@ -81,15 +114,17 @@ class _GroceryListState extends State<GroceryList> {
       content = const Center(child: CircularProgressIndicator(),);
     }
 
+    if(_error != null){
+      content = Center(child: Text(_error!));
+    }
+
     if(_groceryItems.isNotEmpty){
       content = ListView.builder(
         itemCount: _groceryItems.length,
         itemBuilder: (ctx, index)  => Dismissible(
           key: ValueKey(_groceryItems[index].id),
           onDismissed: (direction) {
-            setState(() {
-              _groceryItems.removeAt(index);
-            });
+            removeItem(_groceryItems[index]);
           },
            child: ListTile(
             title: Text(_groceryItems[index].name),
