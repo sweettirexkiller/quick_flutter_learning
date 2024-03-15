@@ -12,14 +12,31 @@ class PlaceDetaileScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(place.title),
       ),
-      body:  Center(
-        child: Text(
-          'Place Details...',
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-              color: Theme.of(context).colorScheme.onBackground
+      body:  Stack(
+        children: [
+          Image.file(
+            place.image,
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          Positioned(
+            bottom: 20,
+            right: 10,
+            child: Container(
+              color: Colors.black54,
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                place.title,
+                style: const TextStyle(
+                  fontSize: 26,
+                  color: Colors.white,
+                ),
+              ),
             ),
-        ),
-      ),
+          ),
+        ],
+      )
     );
   }
 }
