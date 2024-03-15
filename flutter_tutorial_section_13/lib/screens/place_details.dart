@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tutorial_section_13/model/place.dart';
 
-class PlaceDetaileScreen extends StatelessWidget {
-  const PlaceDetaileScreen({super.key, required this.place});
+class PlaceDetailsScreen extends StatelessWidget {
+  const PlaceDetailsScreen({super.key, required this.place});
 
   final Place place;
 
