@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tutorial_section_13/providers/user_provider.dart';
 import 'package:flutter_tutorial_section_13/widgets/image_input.dart';
+import 'package:flutter_tutorial_section_13/widgets/location_input.dart';
 
 class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
@@ -54,6 +55,8 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
             // image input
             const SizedBox(height: 10),
             ImageInput(onSelectImage: _onSelectImage,),
+            const SizedBox(height: 16),
+            const LocationInput(),
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: _savePlace,
