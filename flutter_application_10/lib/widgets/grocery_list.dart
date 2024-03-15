@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 class GroceryList extends StatefulWidget {
   const GroceryList({super.key});
 
+  
+
   @override
   State<GroceryList> createState() => _GroceryListState();
 }
@@ -16,7 +18,7 @@ class GroceryList extends StatefulWidget {
 class _GroceryListState extends State<GroceryList> {
 
   final List<GroceryItem> _groceryItems = [];
-
+  var _isLoading = true;
 
   @override
   void initState() {
@@ -25,7 +27,7 @@ class _GroceryListState extends State<GroceryList> {
   }
 
   void _loadData() async {
-    
+
     final result = await http.get(
       Uri.https('flutter-tutorial-622e7-default-rtdb.firebaseio.com', 'shopping-list.json'),
     );
@@ -49,25 +51,35 @@ class _GroceryListState extends State<GroceryList> {
     setState(() {
       _groceryItems.clear();
       _groceryItems.addAll(loadedItems);
+      _isLoading = false;
     });
 
   }
 
 
   void _addItem() async {
-   await Navigator.of(context).push(
+   final newItem = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => const NewItem(),
       ),
     );
 
-    _loadData();
+    // _loadData();
+    if(newItem != null){
+      setState(() {
+        _groceryItems.add(newItem as GroceryItem);
+      });
+    }
   }
 
 
   @override
   Widget build(BuildContext context) {
     Widget content = const Center(child: Text('No items yet!'),);
+
+    if (_isLoading) {
+      content = const Center(child: CircularProgressIndicator(),);
+    }
 
     if(_groceryItems.isNotEmpty){
       content = ListView.builder(

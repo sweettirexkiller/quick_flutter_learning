@@ -41,7 +41,7 @@ class _NewItemState extends State<NewItem> {
       }),
     );
 
-    print(result.body);
+    final resData = json.decode(result.body);
     print(result.statusCode);
 
     print(_enteredName);
@@ -52,7 +52,7 @@ class _NewItemState extends State<NewItem> {
       return;
     }
 
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(GroceryItem(id: resData['name'], name: _enteredName, quantity: _enteredQuantity, category: _selectedCategory));
   }
 
 
