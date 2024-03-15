@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tutorial_section_13/model/place.dart';
+import 'package:flutter_tutorial_section_13/screens/map.dart';
 
 class PlaceDetailsScreen extends StatelessWidget {
   const PlaceDetailsScreen({super.key, required this.place});
@@ -32,9 +34,16 @@ class PlaceDetailsScreen extends StatelessWidget {
             left:0,
             child: Column(
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(locationImage),
-                  radius: 70,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => MapScreen(location: place.location, isSelecting: false))
+                    );
+                  },
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(locationImage),
+                    radius: 70,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Text(
