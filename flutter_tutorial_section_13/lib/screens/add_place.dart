@@ -24,6 +24,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   }
 
   void _onSelectLocation(PlaceLocation location){
+    print('picked location: $location');
     _pickedLocation = location;
   }
 
@@ -31,8 +32,10 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
     if(_titleController.text.trim().isEmpty || _titleController.text.length < 3 || _titleController.text.length > 20 || _pickedImage == null){
       return;
     }
+    print('Adding place');
+    print("picked locatrio: $_pickedLocation");
 
-    ref.read(userPlacesProvider.notifier).addPlace(_titleController.text, _pickedImage!,_pickedLocation!);
+    ref.read(userPlacesProvider.notifier).addPlace(_titleController.text, _pickedImńage!,_pickedLocation!);
     Navigator.of(context).pop();
   }
 

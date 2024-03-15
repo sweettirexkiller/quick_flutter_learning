@@ -64,16 +64,17 @@ class _LocationInputState extends State<LocationInput> {
     final res = await http.get(url);
     final address = json.decode(res.body)['results'][0]['formatted_address'];
 
+    PlaceLocation pickedLocation = PlaceLocation(
+      latitude: locationData.latitude!,
+      longitude: locationData.longitude!,
+      address: address,
+    );
     setState(() {
-      _pickedLocation = PlaceLocation(
-        latitude: locationData.latitude!,
-        longitude: locationData.longitude!,
-        address: address,
-      );
+      _pickedLocation = pickedLocation;
       _isGettingLocation = false;
     });
 
-
+    widget.onSelectLocation(pickedLocation);
 
   }
 
