@@ -29,6 +29,7 @@ class _GroceryListState extends State<GroceryList> {
 
   void _loadData() async {
 
+    
     final result = await http.get(
       Uri.https('flutter-tutorial-622e7-default-rtdb.firebaseio.com', 'shopping-list.json'),
     );
@@ -41,9 +42,12 @@ class _GroceryListState extends State<GroceryList> {
       return;
     }
 
+
+
     // map result.body to a list of grocery items
     // tmp list of grocery items
     final List<GroceryItem> loadedItems = [];
+
 
     if(result.body != 'null'){
       final data = json.decode(result.body) as Map<String,dynamic>;
@@ -55,6 +59,11 @@ class _GroceryListState extends State<GroceryList> {
           category: categories.entries.firstWhere((element) => element.value.title == value['category']).value,
         ));
       });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
     }
 
     setState(() {
