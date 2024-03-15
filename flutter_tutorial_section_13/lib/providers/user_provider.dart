@@ -8,8 +8,8 @@ class UserPlacesNotifier extends StateNotifier<List<Place>>{
   UserPlacesNotifier() :super(const []);
 
 
-  void addPlace(String title, File image){
-    state = [...state, Place(title: title, image: image)];
+  void addPlace(String title, File image, PlaceLocation location){
+    state = [...state, Place(title: title, image: image, location: location)];
   }
 
   void removePlace(String id){
