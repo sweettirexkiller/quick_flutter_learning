@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -18,17 +19,17 @@ class GroceryList extends StatefulWidget {
 class _GroceryListState extends State<GroceryList> {
 
   final List<GroceryItem> _groceryItems = [];
-  var _isLoading = true;
+  late Future<List<GroceryItem>> _loadedItems;
   String? _error;
 
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _loadedItems = _loadData();
   }
 
-  void _loadData() async {
-
+  Future<List<GroceryItem>> _loadData() async {
+    final List<GroceryItem> loadedItems = [];
     
     final result = await http.get(
       Uri.https('flutter-tutorial-622e7-default-rtdb.firebaseio.com', 'shopping-list.json'),
@@ -36,18 +37,14 @@ class _GroceryListState extends State<GroceryList> {
 
     print(result.statusCode);
     if(result.statusCode >= 400){
-      setState(() {
-        _error = 'Error loading data: ${result.statusCode}';
-      });
-      return;
+      throw Exception('Failed to load groceries');
     }
 
 
 
     // map result.body to a list of grocery items
     // tmp list of grocery items
-    final List<GroceryItem> loadedItems = [];
-
+  
 
     if(result.body != 'null'){
       final data = json.decode(result.body) as Map<String,dynamic>;
@@ -60,18 +57,10 @@ class _GroceryListState extends State<GroceryList> {
         ));
       });
     } else {
-      setState(() {
-        _isLoading = false;
-      });
-      return;
+      return [];
     }
 
-    setState(() {
-      _groceryItems.clear();
-      _groceryItems.addAll(loadedItems);
-      _isLoading = false;
-    });
-
+    return loadedItems;
   }
 
 
@@ -82,7 +71,6 @@ class _GroceryListState extends State<GroceryList> {
       ),
     );
 
-    // _loadData();
     if(newItem != null){
       setState(() {
         _groceryItems.add(newItem as GroceryItem);
@@ -117,33 +105,6 @@ class _GroceryListState extends State<GroceryList> {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = const Center(child: Text('No items yet!'),);
-
-    if (_isLoading) {
-      content = const Center(child: CircularProgressIndicator(),);
-    }
-
-    if(_error != null){
-      content = Center(child: Text(_error!));
-    }
-
-    if(_groceryItems.isNotEmpty){
-      content = ListView.builder(
-        itemCount: _groceryItems.length,
-        itemBuilder: (ctx, index)  => Dismissible(
-          key: ValueKey(_groceryItems[index].id),
-          onDismissed: (direction) {
-            removeItem(_groceryItems[index]);
-          },
-           child: ListTile(
-            title: Text(_groceryItems[index].name),
-            trailing: Text('${_groceryItems[index].quantity}x'),
-            leading: Container(width:24,height: 24, color: _groceryItems[index].category.color),
-          )
-        )
-         
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -155,7 +116,38 @@ class _GroceryListState extends State<GroceryList> {
           )
         ]
       ),
-      body:  content,
+      body:  FutureBuilder(
+        future: _loadedItems,
+        builder: (ctx, snapshot) {
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(child: CircularProgressIndicator(),);
+          }
+
+          if(snapshot.hasError){
+            return Center(child: Text('An error occurred: ${snapshot.error.toString()}'),);
+          }
+
+          if(snapshot.data!.isEmpty){
+            return const Center(child: Text('No items yet!'),);
+          }
+          return  ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (ctx, index)  => Dismissible(
+                      key: ValueKey(snapshot.data![index].id),
+                      onDismissed: (direction) {
+                        removeItem(snapshot.data![index]);
+                      },
+                      child: ListTile(
+                        title: Text(snapshot.data![index].name),
+                        trailing: Text('${snapshot.data![index].quantity}x'),
+                        leading: Container(width:24,height: 24, color: snapshot.data![index].category.color),
+                      )
+                    )
+         
+                  );
+
+        },
+      )
     );
   }
 }
