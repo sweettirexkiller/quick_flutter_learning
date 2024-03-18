@@ -67,6 +67,8 @@ class UserPlacesNotifier extends StateNotifier<List<Place>>{
     });
 
     state = [...state, newPlace];
+
+
   }
 
   void removePlace(String id){
