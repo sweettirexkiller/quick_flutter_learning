@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tutorial_section_13/model/place.dart';
+import 'package:flutter_tutorial_section_13/screens/map.dart';
 import 'package:flutter_tutorial_section_13/widgets/places_list.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
@@ -114,7 +116,33 @@ class _LocationInputState extends State<LocationInput> {
           children: [
             TextButton.icon(icon: const Icon(Icons.location_on), label: const Text('Get Current Location'),onPressed: _getCurrentLocation),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: () async {
+                LatLng selectedLocation = await Navigator.of(context).push(
+                  MaterialPageRoute(
+                    fullscreenDialog: true,
+                    builder: (ctx) => const MapScreen(),
+                  ),
+                );
+                if(selectedLocation == null){
+                  return;
+                }
+
+                final url = Uri.parse('https://maps.googleapis.com/maps/api/geocode/json?latlng=${selectedLocation.latitude},${selectedLocation.longitude}&key=AIzaSyAFSTRooipQaDvZN43jDESfR1Mu99reg8M');
+                final res = await http.get(url);
+                final address = json.decode(res.body)['results'][0]['formatted_address'];
+
+                PlaceLocation pickedLocation = PlaceLocation(
+                  latitude: selectedLocation.latitude,
+                  longitude: selectedLocation.longitude,
+                  address: address,
+                );
+
+                setState(() {
+                  _pickedLocation = pickedLocation;
+                });
+
+                widget.onSelectLocation(pickedLocation);
+              },
               icon: const Icon(CupertinoIcons.map),
               label: const Text('Select on map'),
             ),
